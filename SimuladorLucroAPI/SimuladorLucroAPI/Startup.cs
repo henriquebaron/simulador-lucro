@@ -26,6 +26,11 @@ namespace SimuladorLucroAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Habilita CORS para permitir chamadas de qualquer domínio
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
             services.AddControllers().AddNewtonsoftJson();
 
             services.AddDbContext<SimuladorLucroAPIContext>(options =>
@@ -39,6 +44,8 @@ namespace SimuladorLucroAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
 
