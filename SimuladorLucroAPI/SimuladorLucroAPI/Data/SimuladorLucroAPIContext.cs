@@ -14,10 +14,12 @@ namespace SimuladorLucroAPI.Data
         {
         }
 
-        public DbSet<SimuladorLucroAPI.Models.Servico> Servico { get; set; }
+        public DbSet<Servico> Servico { get; set; }
+        public DbSet<Agendamento> Agendamento { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Definições para a tabela de serviços
             modelBuilder.Entity<Servico>()
                 .Property(p => p.Nome).IsRequired();
             modelBuilder.Entity<Servico>()
@@ -28,6 +30,16 @@ namespace SimuladorLucroAPI.Data
                 .Property(p => p.Valor).HasColumnType("DECIMAL(5,2)").IsRequired();
             modelBuilder.Entity<Servico>()
                 .Property(p => p.Custo).HasColumnType("DECIMAL(5,2)").IsRequired();
+
+            // Definições para a tabela de agendamentos
+            modelBuilder.Entity<Agendamento>().HasKey(p => p.Id);
+            modelBuilder.Entity<Agendamento>()
+                .HasOne(p => p.Servico).WithMany().HasForeignKey(p => p.IdServico).IsRequired();
+            modelBuilder.Entity<Agendamento>()
+                .Property(p => p.DataHora).IsRequired();
+            modelBuilder.Entity<Agendamento>()
+                .Property(p => p.Valor).HasColumnType("DECIMAL(5,2)").IsRequired();
         }
+
     }
 }
