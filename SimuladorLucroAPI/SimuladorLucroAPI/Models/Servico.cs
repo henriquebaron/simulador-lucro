@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SimuladorLucroAPI.ViewModels;
 
 namespace SimuladorLucroAPI.Models
 {
@@ -13,5 +14,18 @@ namespace SimuladorLucroAPI.Models
         public TimeSpan Duracao { get; set; }
         public decimal Valor { get; set; }
         public decimal Custo { get; set; }
+
+        public Servico() { }
+
+        public Servico(ServicoViewModel viewModel)
+        {
+            Id = viewModel.Id;
+            Nome = viewModel.Nome;
+            Descricao = viewModel.Descricao;
+            var partesDuracao = viewModel.Duracao.Split(':');
+            Duracao = new TimeSpan(int.Parse(partesDuracao[0]), int.Parse(partesDuracao[1]), 0);
+            Valor = viewModel.Valor;
+            Custo = viewModel.Custo;
+        }
     }
 }
