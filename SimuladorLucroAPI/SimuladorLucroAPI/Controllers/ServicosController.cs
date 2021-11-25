@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SimuladorLucroAPI.Data;
 using SimuladorLucroAPI.Models;
+using SimuladorLucroAPI.ViewModels;
 
 namespace SimuladorLucroAPI.Controllers
 {
@@ -23,14 +24,14 @@ namespace SimuladorLucroAPI.Controllers
 
         // GET: api/Servicos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Servico>>> GetServico()
+        public async Task<ActionResult<IEnumerable<ServicoViewModel>>> GetServico()
         {
-            return await _context.Servico.ToListAsync();
+            return await _context.Servico.Select(s => new ServicoViewModel(s)).ToListAsync();
         }
 
         // GET: api/Servicos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Servico>> GetServico(int id)
+        public async Task<ActionResult<ServicoViewModel>> GetServico(int id)
         {
             var servico = await _context.Servico.FindAsync(id);
 
@@ -39,19 +40,21 @@ namespace SimuladorLucroAPI.Controllers
                 return NotFound();
             }
 
-            return servico;
+            return new ServicoViewModel(servico);
         }
 
         // PUT: api/Servicos/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutServico(int id, Servico servico)
+        public async Task<IActionResult> PutServico(int id, ServicoViewModel servicoViewModel)
         {
-            if (id != servico.Id)
+            if (id != servicoViewModel.Id)
             {
                 return BadRequest();
             }
+
+            Servico servico = new Servico(servicoViewModel);
 
             _context.Entry(servico).State = EntityState.Modified;
 
@@ -78,17 +81,19 @@ namespace SimuladorLucroAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Servico>> PostServico(Servico servico)
+        public async Task<ActionResult<ServicoViewModel>> PostServico(ServicoViewModel servicoViewModel)
         {
+            Servico servico = new Servico(servicoViewModel);
             _context.Servico.Add(servico);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetServico", new { id = servico.Id }, servico);
+            servicoViewModel.Id = servico.Id;
+            return CreatedAtAction("GetServico", new { id = servico.Id }, servicoViewModel);
         }
 
         // DELETE: api/Servicos/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Servico>> DeleteServico(int id)
+        public async Task<ActionResult<ServicoViewModel>> DeleteServico(int id)
         {
             var servico = await _context.Servico.FindAsync(id);
             if (servico == null)
@@ -99,7 +104,7 @@ namespace SimuladorLucroAPI.Controllers
             _context.Servico.Remove(servico);
             await _context.SaveChangesAsync();
 
-            return servico;
+            return new ServicoViewModel(servico);
         }
 
         private bool ServicoExists(int id)
