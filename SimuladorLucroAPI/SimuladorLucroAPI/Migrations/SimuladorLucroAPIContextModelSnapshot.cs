@@ -29,18 +29,18 @@ namespace SimuladorLucroAPI.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdServico")
-                        .HasColumnType("int");
-
                     b.Property<string>("NomeCliente")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ServicoId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
                         .HasColumnType("DECIMAL(5,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdServico");
+                    b.HasIndex("ServicoId");
 
                     b.ToTable("Agendamento");
                 });
@@ -78,8 +78,8 @@ namespace SimuladorLucroAPI.Migrations
             modelBuilder.Entity("SimuladorLucroAPI.Models.Agendamento", b =>
                 {
                     b.HasOne("SimuladorLucroAPI.Models.Servico", "Servico")
-                        .WithMany()
-                        .HasForeignKey("IdServico")
+                        .WithMany("Agendamentos")
+                        .HasForeignKey("ServicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

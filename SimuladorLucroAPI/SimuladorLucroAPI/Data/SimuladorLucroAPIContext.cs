@@ -32,14 +32,16 @@ namespace SimuladorLucroAPI.Data
                 .Property(p => p.Custo).HasColumnType("DECIMAL(5,2)").IsRequired();
 
             // Definições para a tabela de agendamentos
-            modelBuilder.Entity<Agendamento>().HasKey(p => p.Id);
             modelBuilder.Entity<Agendamento>()
-                .HasOne(p => p.Servico).WithMany().HasForeignKey(p => p.IdServico).IsRequired();
+                .HasOne(p => p.Servico).WithMany();
             modelBuilder.Entity<Agendamento>()
                 .Property(p => p.DataHora).IsRequired();
             modelBuilder.Entity<Agendamento>()
                 .Property(p => p.Valor).HasColumnType("DECIMAL(5,2)").IsRequired();
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseLazyLoadingProxies();
 
     }
 }
