@@ -31,7 +31,7 @@ namespace SimuladorLucroAPI.Controllers
             return resultado;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("simfaturamento")]
         public decimal CalcularFaturamento(AgendamentoSimulacaoViewModel[] agendamentos)
         {
