@@ -15,5 +15,10 @@ namespace SimuladorLucroAPI.Models
         {
             return agendamentos.Sum(p => p.Servico.Valor);
         }
+
+        public static decimal CalcularLucro(IEnumerable<AgendamentoBase> agendamentos)
+        {
+            return agendamentos.Sum(p => p.Servico.Valor - p.Servico.Custo);
+        }
     }
 }

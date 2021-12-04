@@ -44,5 +44,19 @@ namespace SimuladorLucroAPI.Controllers
                 });
             return AgendamentoBase.CalcularFaturamento(listaAgendamentos);
         }
+
+        [HttpPost]
+        [Route("simlucro")]
+        public decimal CalcularLucro(AgendamentoSimulacaoViewModel[] agendamentos)
+        {
+            IEnumerable<AgendamentoBase> listaAgendamentos = agendamentos.ToList()
+                .Select(p => new AgendamentoBase()
+                {
+                    DataHora = DateTime.Parse(p.Hora),
+                    ServicoId = p.ServicoId,
+                    Servico = _context.Servico.Where(s => s.Id == p.ServicoId).Single()
+                });
+            return AgendamentoBase.CalcularLucro(listaAgendamentos);
+        }
     }
 }
