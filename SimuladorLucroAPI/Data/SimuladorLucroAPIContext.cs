@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SimuladorLucroAPI.Models;
 
 namespace SimuladorLucroAPI.Data
 {
-    public class SimuladorLucroAPIContext : DbContext
+    public class SimuladorLucroAPIContext : IdentityDbContext<User>
     {
         public SimuladorLucroAPIContext (DbContextOptions<SimuladorLucroAPIContext> options)
             : base(options)
@@ -19,6 +20,8 @@ namespace SimuladorLucroAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Definições para a tabela de serviços
             modelBuilder.Entity<Servico>()
                 .Property(p => p.Nome).IsRequired();

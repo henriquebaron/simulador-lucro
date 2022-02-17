@@ -11,6 +11,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SimuladorLucroAPI.Data;
+using SimuladorLucroAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace SimuladorLucroAPI
 {
@@ -33,8 +36,14 @@ namespace SimuladorLucroAPI
             });
             services.AddControllers().AddNewtonsoftJson();
 
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<SimuladorLucroAPIContext>();
+
             services.AddDbContext<SimuladorLucroAPIContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SimuladorLucroAPIContext")));
+
+            var mapperConfig = new MapperConfiguration(c => c.AddProfile(new MappingProfile()));
+            var mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
